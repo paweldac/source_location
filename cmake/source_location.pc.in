@@ -1,0 +1,8 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+includedir=${prefix}/include
+
+Name: source_location
+Description: source_location implementation for pre-c++20 projects
+URL: https://github.com/paweldac/source_location
+Version: @source_location_VERSION@
+Cflags: -I${includedir}
