@@ -4,7 +4,7 @@ language: cpp
 
 cache:
   directories:
-    - ${HOME}/deps/llvm-8.0.0
+    - ${HOME}/deps/llvm-8.0.1
     - ${HOME}/deps/llvm-9.0.1
     - ${HOME}/deps/llvm-10.0.0
     - ${HOME}/deps/cmake-3.17.0
@@ -104,20 +104,14 @@ install:
   # Install the right version of clang, libc++ and libc++abi
   - |
     if [[ "${CXX%%+*}" == "clang" ]]; then
-      if   [[ "${CXX}" == "clang++-8" ]];   then LLVM_VERSION="8.0.0";
+      if   [[ "${CXX}" == "clang++-8" ]];   then LLVM_VERSION="8.0.1";
       elif [[ "${CXX}" == "clang++-9" ]];   then LLVM_VERSION="9.0.1";
       elif [[ "${CXX}" == "clang++-10" ]];  then LLVM_VERSION="10.0.0";
       fi
 
-      if [[ "${CXX}" == "clang++-8" ]]; then
-        LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-        LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-        LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-      else
-        LLVM_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
-        LIBCXX_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
-        LIBCXXABI_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
-      fi
+      LLVM_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+      LIBCXX_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+      LIBCXXABI_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
 
       if [[ -z "$(ls -A ${DEPS_DIR}/llvm-${LLVM_VERSION})" ]]; then
         mkdir -p llvm-${LLVM_VERSION} llvm-${LLVM_VERSION}/build llvm-${LLVM_VERSION}/projects/libcxx llvm-${LLVM_VERSION}/projects/libcxxabi
