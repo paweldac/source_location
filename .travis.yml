@@ -26,7 +26,7 @@ jobs:
           packages: ["clang-8", "valgrind"]
         }
       }
-    - env: COMPILER=clang++-9 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=Debug
+    - env: COMPILER=clang++-9 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: {
         apt: {
           sources: [
@@ -38,7 +38,7 @@ jobs:
           packages: ["clang-9", "valgrind"]
         }
       }
-    - env: COMPILER=clang++-10 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=Debug
+    - env: COMPILER=clang++-10 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: {
         apt: {
           sources: [
@@ -50,11 +50,11 @@ jobs:
           packages: ["clang-10", "valgrind"]
         }
       }
-    - env: COMPILER=g++-9 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=Debug
+    - env: COMPILER=g++-9 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: { apt: { packages: ["g++-9", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
-    - env: COMPILER=g++-8 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=Debug
+    - env: COMPILER=g++-8 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: { apt: { packages: ["g++-8", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
-    - env: COMPILER=g++-7 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=Debug
+    - env: COMPILER=g++-7 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: { apt: { packages: ["g++-7", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
     - env: COMPILER=g++-6 BUILD_EXAMPLES=true BUILD_TESTS=true MEMCHECK=true BUILD_TYPE=RelWithDebugInfo
       addons: { apt: { packages: ["g++-6", "valgrind"], sources: ["ubuntu-toolchain-r-test"] } }
