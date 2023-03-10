@@ -16,6 +16,7 @@ Supported plaforms:
 Supported compilers:
 - GCC starting from version 4.8
 - Clang starting from version 9.0
+- MSVC starting from version 1925
 
 On unsupported platforms/compilers:
 - instead of file_name/function_name it will print 'unsupported'
