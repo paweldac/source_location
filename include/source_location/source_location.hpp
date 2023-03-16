@@ -18,6 +18,11 @@ public:
         const char* functionName = __builtin_FUNCTION(),
         const uint_least32_t lineNumber = __builtin_LINE(),
         const uint_least32_t columnOffset = 0) noexcept
+#elif defined(_MSC_VER) and (_MSC_VER > 1925)
+    static constexpr source_location current(const char* fileName = __builtin_FILE(),
+        const char* functionName = __builtin_FUNCTION(),
+        const uint_least32_t lineNumber = __builtin_LINE(),
+        const uint_least32_t columnOffset = __builtin_COLUMN()) noexcept
 #else
     static constexpr source_location current(const char* fileName = "unsupported",
         const char* functionName = "unsupported",
