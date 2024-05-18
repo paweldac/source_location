@@ -1,0 +1,122 @@
+name: UnitTests on multiple platforms
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+              name: "Ubuntu 20.04 gcc-9",
+              os: ubuntu-20.04,
+              build_type: Debug,
+              c_compiler: "gcc-9", cpp_compiler: "g++-9"
+            }
+          - {
+                name: "Ubuntu 20.04 gcc-10",
+                os: ubuntu-20.04,
+                build_type: Debug,
+                c_compiler: "gcc-10", cpp_compiler: "g++-10"
+            }
+          - {
+              name: "Ubuntu 22.04 gcc-11",
+              os: ubuntu-22.04,
+              build_type: Debug,
+              c_compiler: "gcc-11", cpp_compiler: "g++-11"
+            }
+          - {
+                name: "Ubuntu 22.04 gcc-12",
+                os: ubuntu-22.04,
+                build_type: Debug,
+                c_compiler: "gcc-12", cpp_compiler: "g++-12"
+            }
+          - {
+              name: "Ubuntu 20.04 clang-10",
+              os: ubuntu-20.04,
+              build_type: Debug,
+              c_compiler: "clang-10", cpp_compiler: "clang++-10"
+            }
+          - {
+              name: "Ubuntu 20.04 clang-11",
+              os: ubuntu-20.04,
+              build_type: Debug,
+              c_compiler: "clang-11", cpp_compiler: "clang++-11"
+            }
+          - {
+                name: "Ubuntu 20.04 clang-12",
+                os: ubuntu-20.04,
+                build_type: Debug,
+                c_compiler: "clang-12", cpp_compiler: "clang++-12"
+            }
+          - {
+              name: "Ubuntu 22.04 clang-13",
+              os: ubuntu-22.04,
+              build_type: Debug,
+              c_compiler: "clang-13", cpp_compiler: "clang++-13"
+            }
+          - {
+                name: "Ubuntu 22.04 clang-14",
+                os: ubuntu-22.04,
+                build_type: Debug,
+                c_compiler: "clang-14", cpp_compiler: "clang++-14"
+            }
+          - {
+                name: "Ubuntu 22.04 clang-15",
+                os: ubuntu-22.04,
+                build_type: Debug,
+                c_compiler: "clang-15", cpp_compiler: "clang++-15"
+            }
+          - {
+                name: "macOS 14 Arm64 clang",
+                os: macos-14,
+                build_type: Debug,
+                c_compiler: "clang", cpp_compiler: "clang++"
+            }
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install apt packages
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install -y ninja-build
+      shell: sh
+
+    - name: Install brew packages
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        echo "ninja" | xargs -n 1 brew install
+      shell: sh
+
+    - name: Setup build environment
+      id: build_env
+      shell: sh
+      run: |
+        echo "cmake-generator=\"Ninja\"" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        echo "source-dir=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
+
+    - name: Configure CMake
+      run: >
+        cmake -B ${{ steps.build_env.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.config.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.config.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
+        -S ${{ steps.build_env.outputs.source-dir }}
+
+    - name: Build
+      run: cmake --build ${{ steps.build_env.outputs.build-output-dir }} --config ${{ matrix.config.build_type }}
+
+    - name: Run CTest
+      working-directory: ${{ steps.build_env.outputs.build-output-dir }}
+      run: ctest --build-config ${{ matrix.config.build_type }}
