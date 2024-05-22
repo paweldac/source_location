@@ -1,0 +1,16 @@
+name: nonstd::source_location CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  ut:
+    name: "UT Tests"
+    uses: ./.github/workflows/ut.yml
+  examples:
+    name: "Showcase application"
+    uses: ./.github/workflows/examples.yml
+    needs: [ut]
