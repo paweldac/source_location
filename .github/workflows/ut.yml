@@ -18,10 +18,10 @@ jobs:
               c_compiler: "gcc-9", cpp_compiler: "g++-9"
             }
           - {
-                name: "Ubuntu 20.04 gcc-10",
-                os: ubuntu-20.04,
-                build_type: Debug,
-                c_compiler: "gcc-10", cpp_compiler: "g++-10"
+              name: "Ubuntu 20.04 gcc-10",
+              os: ubuntu-20.04,
+              build_type: Debug,
+              c_compiler: "gcc-10", cpp_compiler: "g++-10"
             }
           - {
               name: "Ubuntu 22.04 gcc-11",
@@ -30,10 +30,10 @@ jobs:
               c_compiler: "gcc-11", cpp_compiler: "g++-11"
             }
           - {
-                name: "Ubuntu 22.04 gcc-12",
-                os: ubuntu-22.04,
-                build_type: Debug,
-                c_compiler: "gcc-12", cpp_compiler: "g++-12"
+              name: "Ubuntu 22.04 gcc-12",
+              os: ubuntu-22.04,
+              build_type: Debug,
+              c_compiler: "gcc-12", cpp_compiler: "g++-12"
             }
           - {
               name: "Ubuntu 20.04 clang-10",
@@ -48,10 +48,10 @@ jobs:
               c_compiler: "clang-11", cpp_compiler: "clang++-11"
             }
           - {
-                name: "Ubuntu 20.04 clang-12",
-                os: ubuntu-20.04,
-                build_type: Debug,
-                c_compiler: "clang-12", cpp_compiler: "clang++-12"
+              name: "Ubuntu 20.04 clang-12",
+              os: ubuntu-20.04,
+              build_type: Debug,
+              c_compiler: "clang-12", cpp_compiler: "clang++-12"
             }
           - {
               name: "Ubuntu 22.04 clang-13",
@@ -60,22 +60,22 @@ jobs:
               c_compiler: "clang-13", cpp_compiler: "clang++-13"
             }
           - {
-                name: "Ubuntu 22.04 clang-14",
-                os: ubuntu-22.04,
-                build_type: Debug,
-                c_compiler: "clang-14", cpp_compiler: "clang++-14"
+              name: "Ubuntu 22.04 clang-14",
+              os: ubuntu-22.04,
+              build_type: Debug,
+              c_compiler: "clang-14", cpp_compiler: "clang++-14"
             }
           - {
-                name: "Ubuntu 22.04 clang-15",
-                os: ubuntu-22.04,
-                build_type: Debug,
-                c_compiler: "clang-15", cpp_compiler: "clang++-15"
+              name: "Ubuntu 22.04 clang-15",
+              os: ubuntu-22.04,
+              build_type: Debug,
+              c_compiler: "clang-15", cpp_compiler: "clang++-15"
             }
           - {
-                name: "macOS 14 Arm64 clang",
-                os: macos-14,
-                build_type: Debug,
-                c_compiler: "clang", cpp_compiler: "clang++"
+              name: "macOS 14 Arm64 clang",
+              os: macos-14,
+              build_type: Debug,
+              c_compiler: "clang", cpp_compiler: "clang++"
             }
 
     steps:
