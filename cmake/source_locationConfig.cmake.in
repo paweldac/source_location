@@ -3,5 +3,9 @@
 # Avoid repeatedly including the targets
 if(NOT TARGET nostd::source_location)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
-    include(${CMAKE_CURRENT_LIST_DIR}/source_locationTargets.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/source_locationConfigTargets.cmake)
 endif()
+
+set_and_check(SOURCE_LOCATION_INCLUDE_DIR "@SOURCE_LOCATION_INCLUDE_INSTALL_DIR@")
+
+check_required_components(source_location)
