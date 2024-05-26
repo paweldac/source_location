@@ -128,7 +128,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.config.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
         -DEXAMPLES_USE_CMAKE_CMAKE_CONFIG=true
-        -DCMAKE_FIND_ROOT_PATH=${{ steps.build_env.outputs.prefix_root }}
+        -DCMAKE_PREFIX_PATH=${{ steps.build_env.outputs.prefix_root }}
         -S ${{ steps.build_env.outputs.examples-source-dir }}
 
     - name: Build showcase application (nonstd::source_location exported cmake target)
