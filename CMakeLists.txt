@@ -13,7 +13,6 @@ if(CMAKE_BINARY_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 
 include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
 include(CTest)
 
 option(SOURCE_LOCATION_BUILD_TESTS "Enable test targets" ON)
@@ -46,34 +45,51 @@ target_include_directories(
   INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
+# Install source_location
+
+set(SOURCE_LOCATION_INCLUDE_INSTALL_DIR
+    ${CMAKE_INSTALL_INCLUDEDIR}/source_location
+    CACHE PATH "Location of header files")
+
 set(SOURCE_LOCATION_CMAKE_CONFIG_DESTINATION
     "${CMAKE_INSTALL_LIBDIR}/cmake/source_location")
+
+# Include files
+
+install(DIRECTORY ${SOURCE_LOCATION_HEADERS_DIR}
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+
+install(
+  TARGETS source_location
+  EXPORT source_locationTargets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+# Install source_location CMake config files
+
+install(
+  EXPORT source_locationTargets
+  DESTINATION ${SOURCE_LOCATION_CMAKE_CONFIG_DESTINATION}
+  NAMESPACE nostd::
+  FILE "source_locationConfigTargets.cmake")
+
+include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
   ${CMAKE_CURRENT_LIST_DIR}/cmake/source_locationConfig.cmake.in
   ${CMAKE_CURRENT_BINARY_DIR}/source_locationConfig.cmake
   INSTALL_DESTINATION ${SOURCE_LOCATION_CMAKE_CONFIG_DESTINATION})
 
-install(
-  TARGETS source_location
-  EXPORT source_locationTargets
-  DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-install(
-  EXPORT source_locationTargets
-  NAMESPACE nostd::
-  DESTINATION ${SOURCE_LOCATION_CMAKE_CONFIG_DESTINATION})
-
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/source_locationConfigVersion.cmake"
   COMPATIBILITY SameMajorVersion)
 
-install(DIRECTORY ${SOURCE_LOCATION_HEADERS_DIR}
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/source_locationConfig.cmake"
               "${CMAKE_CURRENT_BINARY_DIR}/source_locationConfigVersion.cmake"
         DESTINATION ${SOURCE_LOCATION_CMAKE_CONFIG_DESTINATION})
+
+# Install source_location pkg-config file
 
 set(SOURCE_LOCATION_PKGCONFIG_INSTALL_DIR
     "${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig"
@@ -84,5 +100,3 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/source_location.pc.in
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/source_location.pc
         DESTINATION ${SOURCE_LOCATION_PKGCONFIG_INSTALL_DIR})
-
-include(CPack)
