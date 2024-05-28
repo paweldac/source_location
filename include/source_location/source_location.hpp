@@ -28,8 +28,7 @@ public:
         return source_location(fileName, functionName, lineNumber, columnOffset);
     }
 
-    source_location(const source_location&) = default;
-    source_location(source_location&&) = default;
+    constexpr source_location() noexcept = default;
 
     constexpr const char* file_name() const noexcept
     {
@@ -52,8 +51,8 @@ public:
     }
 
 private:
-    constexpr source_location(const char* fileName, const char* functionName, const uint_least32_t lineNumber,
-        const uint_least32_t columnOffset) noexcept
+    constexpr source_location(const char* fileName, const char* functionName, uint_least32_t lineNumber,
+        uint_least32_t columnOffset) noexcept
         : fileName(fileName)
         , functionName(functionName)
         , lineNumber(lineNumber)
@@ -61,10 +60,10 @@ private:
     {
     }
 
-    const char* fileName;
-    const char* functionName;
-    const std::uint_least32_t lineNumber;
-    const std::uint_least32_t columnOffset;
+    const char* fileName = "";
+    const char* functionName = "";
+    std::uint_least32_t lineNumber {};
+    std::uint_least32_t columnOffset {};
 };
 } // namespace nostd
 

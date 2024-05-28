@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 project(
   source_location
   LANGUAGES CXX
-  VERSION 0.1)
+  VERSION 0.2)
 
 if(CMAKE_BINARY_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   message(
