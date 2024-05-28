@@ -75,6 +75,7 @@ jobs:
               name: "macOS 14 Arm64 clang",
               os: macos-14,
               build_type: Release,
+              xcode-version: "15.0.1",
               c_compiler: "clang", cpp_compiler: "clang++"
             }
 
@@ -107,6 +108,12 @@ jobs:
         echo "prefix_root=${HOME}/prefix_root" >> "$GITHUB_OUTPUT"
         echo "library-source-dir=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
         echo "examples-source-dir=${{ github.workspace }}/examples" >> "$GITHUB_OUTPUT"
+
+    - name: Setup Xcode version
+      if: runner.os == 'macOS'
+      shell: sh
+      run: >
+        sudo xcode-select -s /Applications/Xcode_${{ matrix.config.xcode-version }}.app
 
     - name: Configure nonstd::source_location CMake
       run: >

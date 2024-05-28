@@ -75,6 +75,7 @@ jobs:
               name: "macOS 14 Arm64 clang",
               os: macos-14,
               build_type: Debug,
+              xcode-version: "15.0.1",
               c_compiler: "clang", cpp_compiler: "clang++"
             }
 
@@ -102,6 +103,12 @@ jobs:
         echo "cmake-generator=\"Ninja\"" >> "$GITHUB_OUTPUT"
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
         echo "source-dir=${{ github.workspace }}" >> "$GITHUB_OUTPUT"
+
+    - name: Setup Xcode version
+      if: runner.os == 'macOS'
+      shell: sh
+      run: >
+        sudo xcode-select -s /Applications/Xcode_${{ matrix.config.xcode-version }}.app
 
     - name: Configure CMake
       run: >
