@@ -5,15 +5,35 @@
 
 #include <cstdint>
 
+// Clang
+#if not defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ >= 9)
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
+// AppleClang https://en.wikipedia.org/wiki/Xcode#Toolchain_versions
+#elif defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__ % 100) >= 110003
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
+// GCC
+#elif defined(__GNUC__) and (__GNUC__ > 4 or (__GNUC__ == 4 and __GNUC_MINOR__ >= 8))
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
+#define NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN
+#endif
+
 namespace nostd {
 struct source_location {
 public:
-#if not defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ >= 9)
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN)
     static constexpr source_location current(const char* fileName = __builtin_FILE(),
         const char* functionName = __builtin_FUNCTION(),
         const uint_least32_t lineNumber = __builtin_LINE(),
         const uint_least32_t columnOffset = __builtin_COLUMN()) noexcept
-#elif defined(__GNUC__) and (__GNUC__ > 4 or (__GNUC__ == 4 and __GNUC_MINOR__ >= 8))
+#elif defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) and defined(NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN)
     static constexpr source_location current(const char* fileName = __builtin_FILE(),
         const char* functionName = __builtin_FUNCTION(),
         const uint_least32_t lineNumber = __builtin_LINE(),
