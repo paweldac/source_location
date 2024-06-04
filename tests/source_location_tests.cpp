@@ -120,20 +120,28 @@ bool stringEndsWith(std::string const& str, std::string const& ending)
 void test_source_location_current()
 {
     const auto sourceLocation = nostd::source_location::current();
-#if (not defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ >= 9)) or (defined(__GNUC__) and (__GNUC__ > 4 or (__GNUC__ == 4 and __GNUC_MINOR__ >= 8)))
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE)
     REQUIRE(sourceLocation.line() == __LINE__ - 2);
-#if defined(__clang__)
+#else
+    REQUIRE(sourceLocation.line() == 0);
+#endif
+
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE)
+    REQUIRE(stringEndsWith(sourceLocation.file_name(), "source_location_tests.cpp"));
+#else
+    REQUIRE(0 == strcmp(sourceLocation.file_name(), "unsupported"));
+#endif
+
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION)
+    REQUIRE(0 == strcmp(sourceLocation.function_name(), "test_source_location_current"));
+#else
+    REQUIRE(0 == strcmp(sourceLocation.function_name(), "unsupported"));
+#endif
+
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN)
     REQUIRE(sourceLocation.column() == 33);
 #else
     REQUIRE(sourceLocation.column() == 0);
-#endif
-    REQUIRE(0 == strcmp(sourceLocation.function_name(), "test_source_location_current"));
-    REQUIRE(stringEndsWith(sourceLocation.file_name(), "source_location_tests.cpp"));
-#else
-    REQUIRE(sourceLocation.line() == 0);
-    REQUIRE(sourceLocation.column() == 0);
-    REQUIRE(0 == strcmp(sourceLocation.function_name(), "unsupported"));
-    REQUIRE(0 == strcmp(sourceLocation.file_name(), "unsupported"));
 #endif
 }
 

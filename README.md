@@ -13,11 +13,13 @@ While this implementation should compile across all platforms and compilers, it 
 Supported platforms:
 
 - Linux
+- macOS
 
 Supported compilers:
 
 - GCC from version 4.8 onward
 - Clang from version 9.0 onward
+- AppleClang from version 11.0.3 (included in Xcode version 11.4) onward
 
 On unsupported compilers, the output will be as follows:
 
@@ -116,10 +118,10 @@ Compilers:
 
 - Clang 10/11/12/13/14/15
 - GCC 9/10/11/12
-- Xcode 15.0.1 (unsupported)
+- Xcode 15.0.1
 
 Previously verified compilers on Travis CI:
 
 - Clang 8/9/10
 - GCC 4.8/5/6/7/8/9
-- Xcode 11.3 (unsupported)
+- Xcode 11.3 (unsupported at that time)
