@@ -23,6 +23,13 @@
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
 #define NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN
+// Microsoft Visual Studio: builtin supports starts with 2019 16.10 Preview 2
+// https://github.com/microsoft/STL/pull/664
+#elif defined(_MSC_VER) and (_MSC_VER >= 1929)
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
 #endif
 
 namespace nostd {
