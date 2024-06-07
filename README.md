@@ -20,13 +20,14 @@ Supported compilers:
 - GCC from version 4.8 onward
 - Clang from version 9.0 onward
 - AppleClang from version 11.0.3 (included in Xcode version 11.4) onward
+- Microsoft C/C++ compiler 19.29 (included in Visual Studio 2019 version 16.10) onward
 
 On unsupported compilers, the output will be as follows:
 
 - The `file_name()` and `function_name()` will display 'unsupported'
 - The `line()` and `column()` will display '0'
 
-The `column()` functionality is exclusively supported on Clang.
+The `column()` functionality is only supported on Clang and Microsoft.
 
 ## Usage
 
