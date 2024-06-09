@@ -78,9 +78,39 @@ jobs:
               xcode-version: "15.0.1",
               c_compiler: "clang", cpp_compiler: "clang++"
             }
+          - {
+              name: "Windows Server 2019 VS-16.11",
+              os: windows-2019, vs_version: "16.0",
+              build_type: Debug,
+              c_compiler: "cl", cpp_compiler: "cl"
+            }
+          - {
+              name: "Windows Server 2019 VS-16.11 (clang-cl)",
+              os: windows-2019, vs_version: "16.0",
+              build_type: Debug,
+              c_compiler: "clang-cl", cpp_compiler: "clang-cl",
+              cmake_extra_commands: "-T ClangCL"
+            }
+          - {
+              name: "Windows Server 2022 VS-17.9",
+              os: windows-2022, vs_version: "17.0",
+              build_type: Debug,
+              c_compiler: "cl", cpp_compiler: "cl"
+            }
+          - {
+              name: "Windows Server 2022 VS-17.9 (clang-cl)",
+              os: windows-2022, vs_version: "17.0",
+              build_type: Debug,
+              c_compiler: "clang-cl", cpp_compiler: "clang-cl",
+              cmake_extra_commands: "-T ClangCL"
+            }
 
     steps:
     - uses: actions/checkout@v4
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+      with:
+        vsversion: ${{ matrix.config.vs_version }}
 
     - name: Install apt packages
       if: runner.os == 'Linux'
@@ -94,6 +124,12 @@ jobs:
       run: |
         brew update
         echo "ninja" | xargs -n 1 brew install
+      shell: sh
+
+    - name: Install choco packages
+      if: runner.os == 'Windows'
+      run: |
+        choco install ninja
       shell: sh
 
     - name: Setup build environment
@@ -117,6 +153,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.config.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
         -S ${{ steps.build_env.outputs.source-dir }}
+        ${{ matrix.config.cmake_extra_commands }}
 
     - name: Build
       run: cmake --build ${{ steps.build_env.outputs.build-output-dir }} --config ${{ matrix.config.build_type }}

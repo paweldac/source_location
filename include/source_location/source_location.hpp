@@ -6,34 +6,40 @@
 #include <cstdint>
 
 // Clang
-#if not defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ >= 9)
+#if defined(__clang__) && !defined(__apple_build_version__) && (__clang_major__ >= 9)
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
 // AppleClang https://en.wikipedia.org/wiki/Xcode#Toolchain_versions
-#elif defined(__apple_build_version__) and defined(__clang__) and (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__ % 100) >= 110003
+#elif defined(__apple_build_version__) && defined(__clang__) && (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__ % 100) >= 110003
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
 // GCC
-#elif defined(__GNUC__) and (__GNUC__ > 4 or (__GNUC__ == 4 and __GNUC_MINOR__ >= 8))
+#elif defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
 #define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
 #define NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN
+// MSVC https://github.com/microsoft/STL/issues/54#issuecomment-616904069 https://learn.microsoft.com/en-us/cpp/overview/compiler-versions?view=msvc-170
+#elif defined(_MSC_VER) && !defined(__clang__) && !defined(__INTEL_COMPILER) && (_MSC_VER >= 1926)
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE
+#define NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN
 #endif
 
 namespace nostd {
 struct source_location {
 public:
-#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN)
+#if defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) && defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) && defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) && defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_COLUMN)
     static constexpr source_location current(const char* fileName = __builtin_FILE(),
         const char* functionName = __builtin_FUNCTION(),
         const uint_least32_t lineNumber = __builtin_LINE(),
         const uint_least32_t columnOffset = __builtin_COLUMN()) noexcept
-#elif defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) and defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) and defined(NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN)
+#elif defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FILE) && defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_FUNCTION) && defined(NOSTD_SOURCE_LOCATION_HAS_BUILTIN_LINE) && defined(NOSTD_SOURCE_LOCATION_NO_BUILTIN_COLUMN)
     static constexpr source_location current(const char* fileName = __builtin_FILE(),
         const char* functionName = __builtin_FUNCTION(),
         const uint_least32_t lineNumber = __builtin_LINE(),
