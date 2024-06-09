@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 project(
   source_location
   LANGUAGES CXX
-  VERSION 0.3)
+  VERSION 0.4)
 
 if(CMAKE_BINARY_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   message(
@@ -30,7 +30,16 @@ endif()
 set(SOURCE_LOCATION_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(SOURCE_LOCATION_HEADERS_DIR ${SOURCE_LOCATION_DIR}/include/)
 
-add_compile_options(-Wall -Wextra -pedantic -Werror)
+# When CMake v3.26 will be incorporated check for empty
+# CMAKE_CXX_COMPILER_FRONTEND_VARIANT can be removed
+# https://cmake.org/cmake/help/v3.26/variable/CMAKE_LANG_COMPILER_FRONTEND_VARIANT.html
+add_compile_options(
+  "$<$<AND:$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>,$<OR:$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},GNU>,$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},>>>:-Werror;-Wall;-Wextra;-pedantic>"
+)
+
+add_compile_options(
+  "$<$<AND:$<COMPILE_LANG_AND_ID:CXX,MSVC,Clang>,$<STREQUAL:${CMAKE_CXX_COMPILER_FRONTEND_VARIANT},MSVC>>:/WX;/W4>"
+)
 
 if(SOURCE_LOCATION_BUILD_TESTS)
   enable_testing()

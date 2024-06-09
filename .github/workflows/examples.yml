@@ -78,9 +78,39 @@ jobs:
               xcode-version: "15.0.1",
               c_compiler: "clang", cpp_compiler: "clang++"
             }
+          - {
+              name: "Windows Server 2019 VS-16.5",
+              os: windows-2019, vs_version: "16.0",
+              build_type: Release,
+              c_compiler: "cl", cpp_compiler: "cl"
+            }
+          - {
+              name: "Windows Server 2019 VS-16.5 (clang-cl)",
+              os: windows-2019, vs_version: "16.0",
+              build_type: Release,
+              c_compiler: "clang-cl", cpp_compiler: "clang-cl",
+              cmake_extra_commands: "-T ClangCL"
+            }
+          - {
+              name: "Windows Server 2022 VS-17.9",
+              os: windows-2022, vs_version: "17.0",
+              build_type: Release,
+              c_compiler: "cl", cpp_compiler: "cl"
+            }
+          - {
+              name: "Windows Server 2022 VS-17.9 (clang-cl)",
+              os: windows-2022, vs_version: "17.0",
+              build_type: Release,
+              c_compiler: "clang-cl", cpp_compiler: "clang-cl",
+              cmake_extra_commands: "-T ClangCL"
+            }
 
     steps:
     - uses: actions/checkout@v4
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: runner.os == 'Windows'
+      with:
+        vsversion: ${{ matrix.config.vs_version }}
 
     - name: Install apt packages
       if: runner.os == 'Linux'
@@ -94,6 +124,12 @@ jobs:
       run: |
         brew update
         echo "ninja" | xargs -n 1 brew install
+      shell: sh
+
+    - name: Install choco packages
+      if: runner.os == 'Windows'
+      run: |
+        choco install ninja pkgconfiglite
       shell: sh
 
     - name: Setup build environment
@@ -124,6 +160,7 @@ jobs:
         -DSOURCE_LOCATION_BUILD_TESTS=false
         -DCMAKE_INSTALL_PREFIX=${{ steps.build_env.outputs.prefix_root }}
         -S ${{ steps.build_env.outputs.library-source-dir }}
+        ${{ matrix.config.cmake_extra_commands }}
 
     - name: Install nonstd::source_location
       run: cmake --build ${{ steps.build_env.outputs.library-build-output-dir }} --target install --config ${{ matrix.config.build_type }}
@@ -137,13 +174,15 @@ jobs:
         -DEXAMPLES_USE_CMAKE_CMAKE_CONFIG=true
         -DCMAKE_PREFIX_PATH=${{ steps.build_env.outputs.prefix_root }}
         -S ${{ steps.build_env.outputs.examples-source-dir }}
+        ${{ matrix.config.cmake_extra_commands }}
 
     - name: Build showcase application (nonstd::source_location exported cmake target)
       run: cmake --build ${{ steps.build_env.outputs.examples-with-exported-cmake-build-output-dir }} --config ${{ matrix.config.build_type }}
 
     - name: Run showcase application (nonstd::source_location exported cmake target)
+      shell: sh
       working-directory: ${{ steps.build_env.outputs.examples-with-exported-cmake-build-output-dir }}
-      run: ./source_location_example.app
+      run: ./bin/source_location_example.app
 
     - name: Configure showcase application CMake (nonstd::source_location pkg-config .pc file)
       run: >
@@ -153,10 +192,12 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
         -DCMAKE_PREFIX_PATH=${{ steps.build_env.outputs.prefix_root }}
         -S ${{ steps.build_env.outputs.examples-source-dir }}
+        ${{ matrix.config.cmake_extra_commands }}
 
     - name: Build showcase application (nonstd::source_location pkg-config .pc file)
       run: cmake --build ${{ steps.build_env.outputs.examples-with-pkg-config-build-output-dir }} --config ${{ matrix.config.build_type }}
 
     - name: Run showcase application (nonstd::source_location pkg-config .pc file)
+      shell: sh
       working-directory: ${{ steps.build_env.outputs.examples-with-pkg-config-build-output-dir }}
-      run: ./source_location_example.app
+      run: ./bin/source_location_example.app
